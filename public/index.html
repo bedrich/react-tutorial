@@ -22,6 +22,13 @@
       var CommentBox = React.createClass({
         displayName: 'CommentBox',
         handleCommentSubmit: function(comment) {
+          comment.id = Date.now();
+
+          var comments = this.state.data;
+          var newComments = comments.concat([comment]);
+
+          this.setState({data: newComments});
+
           $.ajax({
             url: this.props.url,
             dataType: 'json',
@@ -32,6 +39,7 @@
             }.bind(this),
             error: function(xhr, status, err) {
               console.error(this.props.url, status, err.toString());
+              this.setState({data: comments});
             }.bind(this)
           });
         },
@@ -119,7 +127,7 @@
           return (
             <form className="commentForm" onSubmit={this.handleSubmit}>
               <input type="text" placeholder="Name" onChange={this.handleAuthorChange} value={this.state.author} />
-              <input type="text" placeholder="Comment" onChange={this.handleCommentChange} value={this.state.comment} />
+              <input type="text" placeholder="Comment" onChange={this.handleCommentChange} value={this.state.text} />
               <input type="submit" value="Post" />
             </form>
           );
